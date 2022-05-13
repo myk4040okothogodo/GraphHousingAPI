@@ -11,8 +11,8 @@ class Category(models.Model):
     BED_SITTERS  = 2
     ONE_BEDROOMS = 3
     TWO_BEDROOMS = 4
-    THREE_BEDROOMS = 5
-    FOUR_BEDROOMS = 6
+    THREE_BEDROOM = 5
+    FOUR_BEDROOM = 6
     MANSION = 7
     BUILDING_CATEGORY = (
         (SINGLE_ROOMS, _('single_rooms')),
@@ -56,7 +56,7 @@ class BuildingImage(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
 
     def __str__(self):
-        return f"{self.building.name} - {self.image}"
+        return f"{self.building.business.name} - {self.product.name} - {self.image}"
 
 
 class BuildingComment(models.Model):

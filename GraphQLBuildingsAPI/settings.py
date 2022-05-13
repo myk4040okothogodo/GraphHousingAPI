@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+from decouple import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-n!383w_x2keq=(9mfz$xa9t#4kh3ggn%@4uh)v^&+m#74o_bxu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','localhost']
 
 
 # Application definition
@@ -38,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'BuildingsAPI',
-    'BuildingsAPI.User'
+    'BuildingsAPI.Users',
+    'BuildingsAPI.Houses',
+    'BuildingsAPI.Buildings',
+    'BuildingsAPI.Payments',
+    'graphene_django',
+
 ]
 
 MIDDLEWARE = [
@@ -120,8 +125,25 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+STATIC_ROOT = 'staticfiles'
+
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'GraphQLBuildingsAPI/static'),
+        ]
+
+DEFAULT_FILE_STORAGE = 'GraphQLBuildingsAPI.storage_backends.MediaStorage'
+
+GRAPHENE = {
+    'SCHEMA' : 'GraphQLBuildingsAPI.schema.schema',
+    'MIDDLEWARE': [
+        'GraphQLBuildingsAPI.middleware.CustomAuthMiddleware'
+        ]
+        }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
