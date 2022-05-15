@@ -22,7 +22,7 @@ class Category(models.Model):
         (FOUR_BEDROOM, _('four_bedroom')),
         (MANSION, _('mansion')),
             )
-    house_category = models.PositiveSmallIntegerField(choices=HOUSE_CATEGORY, primary_key=True)
+    name = models.PositiveSmallIntegerField(choices=HOUSE_CATEGORY, primary_key=True)
 
     def __str__(self):
         return self.house_category
@@ -31,8 +31,9 @@ class Category(models.Model):
 class House(models.Model):
     """A single unit in a building that houses the tenant."""
     building = models.OneToOneField(Building, blank=False, null=False, on_delete=Models.CASCADE)
-    house_category = models.ForeignKey(Category, related_name = "house_category", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name = "house_category", on_delete=models.CASCADE)
     house_number = models.IntegerField(blank=False, null=False)
+    rent     = models.FloatField()
     floor_no = models.IntegerField(blank=False, null=False)
     tenant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="house_tenants", null=True, on_delete=models.CASCADE)
     occupied = models.BooleanField(default=False)

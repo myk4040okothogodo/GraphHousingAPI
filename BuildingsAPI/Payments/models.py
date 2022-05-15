@@ -20,7 +20,7 @@ class Category(models.Model):
         (WATER_BILL, ('water_bill')),
         (GARBAGE_COLLECTION, ('garbage_collection')),
             )
-    payment_category = models.PositiveSmallIntegerField(choices=PAYMENT_TYPE, primary_keys=True)
+    name = models.PositiveSmallIntegerField(choices=PAYMENT_TYPE, primary_keys=True)
 
     def __str__(self):
         return self.payment_category
@@ -28,10 +28,10 @@ class Category(models.Model):
 
 class Payment(models.Model):
     """This class represents rent/utility payments made by the tenants. """
-    payment_type =  models.ForeignKey(Category, related_name="payment_categories", on_delete=models.CASCADE)
-    room = models.ForeignKey(House,blank=False, null=False, on_delete=models.CASCADE)
+    categories =  models.ForeignKey(Category, related_name="payment_categories", on_delete=models.CASCADE)
+    house = models.ForeignKey(House,blank=False, null=False, on_delete=models.CASCADE)
     tenant = models.ForeignKey(settings.AUTH_USER_MODEL,blank=False,related_name="payments_tenantid", null=False, on_delete=models.CASCADE)
-    amount_paid = MoneyField(max_digits=10, decimal_places=2, default_currency='KES')
+    amountpaid = MoneyField(max_digits=10, decimal_places=2, default_currency='KES')
     receipt_no = models.IntegerField(blank=False,null=False)
     date = models.DateTimeField(default=datetime.now, blank=False)
 
