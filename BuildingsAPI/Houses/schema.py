@@ -1,9 +1,10 @@
 import graphene
 from graphene_django import DjangoObjectType
-from GraphHousingAPI.permissions import paginate, is_authenticated, get_query
+from GraphQLBuildingsAPI.permissions import paginate, is_authenticated, get_query
 from django.db.models import Q
 
 from .models import (Category, House, HouseImage, HouseComment )
+
 
 class CategoryType(DjangoObjectType):
     count = graphene.Int()
@@ -38,7 +39,6 @@ class Query(graphene.ObjectType):
         if name:
             query = query.filter(Q(name__icontains=name) | Q(name__iexact=name)).distinct()
         return query
-
 
     def resolve_houses(self, info, **kwargs):
         mine = kwargs.get("mine", False)
@@ -99,12 +99,12 @@ class Query(graphene.ObjectType):
                 ).get(id=id)
         return query
 
+
 class HouseInput(graphene.InputObjectType):
     house_number = graphene.Int()
     rent         = graphene.Float()
     floor_no     = graphene.Int()
     occupied     = graphene.Boolean()
-
 
 class HouseImageInput(graphene.InputObjectType):
     image_id = graphene.ID(required=True)
@@ -173,7 +173,7 @@ class  DeleteHouse(graphene.Mutation):
     def mutate(self,info, house_id):
         House.objects.filter(id=house_id, building_id=info.context.user.user_building.id).delete()
 
-        return DeleteProduct(
+        return DeleteHouse(
                 status = True
                 )
 
@@ -181,7 +181,7 @@ class UpdateHouseImage(graphene.Mutation):
     image = graphene.Field(HouseImageType)
 
     class Arguments:
-        image_data = HouseImageInput
+        image_data = HouseImageInput()
         id = graphene.ID(required=True)
 
     @is_authenticated
@@ -225,6 +225,16 @@ class CreateHouseComment(graphene.Mutation):
         HouseComment.objects.filter(user= info.context.user.id, house_id=house_id).delete()
 
         hc = HouseComment.objects.create(house_id=house_id, **kwargs)
-        return CreateHouseImage(
+        return CreateHouseComment(
             house_comment = hc
                 )
+
+
+class Mutation(graphene.ObjectType):
+    create_house = CreateHouse.Field()
+    update_house = UpdateHouse.Field()
+    delete_house = DeleteHouse.Field()
+    update_house_image = UpdateHouseImage.Field()
+    create_house_comment = CreateHouseComment.Field()
+
+schema = graphene.Schema(query=Query, mutation=Mutation)

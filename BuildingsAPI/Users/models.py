@@ -63,7 +63,7 @@ class UserProfile(models.Model):
     phone = models.PositiveIntegerField()
     country_code = models.CharField(default="+254", max_length=5)
     created_at  = models.DateTimeField(auto_now_add=True)
-    updated_at  =  models.DateTimeField(auto_noew=True)
+    updated_at  =  models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.user.email

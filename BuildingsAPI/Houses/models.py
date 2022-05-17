@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from ..Buildings.models import Building
 from django.utils.translation import ugettext_lazy as _
-
+from BuildingsAPI.Users.models import ImageUpload
 
 class Category(models.Model):
     
@@ -30,7 +30,7 @@ class Category(models.Model):
 
 class House(models.Model):
     """A single unit in a building that houses the tenant."""
-    building = models.OneToOneField(Building, blank=False, null=False, on_delete=Models.CASCADE)
+    building = models.OneToOneField(Building, blank=False, null=False, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name = "house_category", on_delete=models.CASCADE)
     house_number = models.IntegerField(blank=False, null=False)
     rent     = models.FloatField()
@@ -52,7 +52,7 @@ class HouseImage(models.Model):
 
 class HouseComment(models.Model):
     house = models.ForeignKey(House, related_name="house_comments", on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="user_comments", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="userwho_comments", on_delete=models.CASCADE)
     comment = models.TextField()
     rate = models.IntegerField(default=3)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from BuildingsAPI.Users.User import ImageUpload
+from BuildingsAPI.Users.models import ImageUpload
 
 
 
@@ -32,7 +32,7 @@ class Category(models.Model):
 
 class Building(models.Model):
     """A building or apartment of multiple rooms housing tenants."""
-    category = models.ForeignKey(Category, related_name="building_category", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name="categoryOf_building", on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=False, default='')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="building_owner", on_delete=models.CASCADE)
     careTaker = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="building_caretaker", on_delete=models.CASCADE)
@@ -61,7 +61,7 @@ class BuildingImage(models.Model):
 
 class BuildingComment(models.Model):
     building = models.ForeignKey(Building, related_name="building_comments", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name="user_comments", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="user_comments", on_delete=models.CASCADE)
     comment = models.TextField()
     rate = models.IntegerField(default=3)
     created_at = models.DateTimeField(auto_now_add=True)

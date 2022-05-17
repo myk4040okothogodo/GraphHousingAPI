@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-from GraphHousingAPI.permissions import paginate, is_authenticated, get_query
+from GraphQLBuildingAPI.permissions import paginate, is_authenticated, get_query
 from django.db.models import Q
 
 from .models import (Category, Payment, PaymentImage )
@@ -17,10 +17,10 @@ class PaymentType(DjangoObjectType):
     class Meta:
         model = Payment
 
-
 class PaymentImageType(DjangoObjectType):
     class Meta:
         model = PaymentImage
+
 
 class Query(graphene.ObjectType):
     categories = graphene.List(CategoryType, name= graphene.String())
@@ -28,15 +28,12 @@ class Query(graphene.ObjectType):
             max_amountpaid=graphene.Float(), min_amountpaid=graphene.Float(), building= graphene.String(), house= graphene.Int(), receipt_no= graphene.Int(), mine=graphene.Boolean())
     payment = graphene.Field(PaymentType, id=graphene.ID(required=True))
 
-
-
     def resolve_categories(self, info, name=False):
         query = Category.objects.prefetch_related("payment_categories")
 
         if name:
             query = query.filter(Q(name__icontains=name) | Q(name__iexact=name)).distinct()
         return query
-
 
     def resolve_payments(self, info, **kwargs):
         mine = kwargs.get("mine", False)
@@ -85,7 +82,6 @@ class Query(graphene.ObjectType):
             query = query.order_by(qs)
         return query
 
-
     def resolve_payment(self, info, id):
         query = Payment.objects.select_related("category","building","house").prefetch_related(
                 "payment_images","payment_requests"
@@ -102,8 +98,6 @@ class PaymentInput(graphene.InputObjectType):
 class PaymentImageInput(graphene.InputObjectType):
     image_id = graphene.ID(required=True)
     is_cover = graphene.Boolean()
-
-
 
 class CreatePayment(graphene.Mutation):
     payment = graphene.Field(PaymentType)
@@ -198,3 +192,14 @@ class UpdatePaymentImage(graphene.Mutation):
         return UpdatePaymentImage(
             image = PaymentImage.objects.get(id=id)
         )
+
+
+class Mutation(graphene.ObjectType):
+    create_payment  = CreatePayment.Field()
+    update_payment  = UpdatePayment.Field()
+    delete_payment  = DeletePayment.Field()
+    update_payment_image = UpdatePaymentImage.Field()
+
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)

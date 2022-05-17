@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-from GraphHousingAPI.permissions import paginate, is_authenticated, get_query
+from GraphQLBuildingsAPI.permissions import paginate, is_authenticated, get_query
 from django.db.models import Q
 
 from .models import (Category, Building, BuildingImage, BuildingComment)
@@ -213,7 +213,7 @@ class Mutation(graphene.ObjectType):
     update_building = UpdateBuilding.Field()
     delete_building = DeleteBuilding.Field()
     update_building_image = UpdateBuildingImage.Field()
-    create_building_comment = CreateBuildingImage.Field()
+    create_building_comment = CreateBuildingComment.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

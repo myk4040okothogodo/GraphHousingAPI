@@ -20,7 +20,7 @@ def paginate(model_type):
             "has_prev": graphene.Boolean(),
             "results": graphene.List(model_type)
             }
-            return type(f"{model_type}Paginated", (graphene.ObjectType,), structure)
+    return type(f"{model_type}Paginated", (graphene.ObjectType,), structure)
 
 def resolve_paginated(query_data, info, page_info):
     def get_paginated_data(qs, paginated_type, page):
@@ -60,7 +60,7 @@ def get_query(query_string, search_fields):
         for field_name in search_fields:
             q = Q(**{"%s__icontains" % field_namae: term})
             if or_query is None:
-                or_query q
+                or_query =  q
             else:
                 or_query = or_query | q
         if query is None:
