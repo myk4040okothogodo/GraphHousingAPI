@@ -4,8 +4,8 @@ from ..Buildings.models import Building
 from django.utils.translation import ugettext_lazy as _
 from BuildingsAPI.Users.models import ImageUpload
 
-class Category(models.Model):
-    
+
+class Category(models.Model):    
     SINGLE_ROOM = 1
     BED_SITTER = 2
     ONE_BEDROOM = 3

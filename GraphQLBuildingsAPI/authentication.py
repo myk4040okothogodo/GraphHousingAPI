@@ -1,4 +1,4 @@
-import datetime from datetime
+from datetime import datetime
 import jwt
 from django.conf import settings
 
@@ -16,7 +16,7 @@ class TokenManager:
     @staticmethod
     def decode_toke(token):
         try:
-            decode = jwt.decode(token, key=settings.SECRET_KEY, algorithms, algorithms="HS256")
+            decode = jwt.decode(token, key=settings.SECRET_KEY, algorithms="HS256")
         except jwt.DecodeError:
             return None
 
@@ -35,7 +35,7 @@ class TokenManager:
 
 
 class Authentication:
-    def __init__(self):
+    def __init__(self, request):
         self.request = request
 
     def authenticate(self):

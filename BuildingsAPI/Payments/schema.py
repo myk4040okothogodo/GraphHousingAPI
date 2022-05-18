@@ -1,17 +1,15 @@
 import graphene
 from graphene_django import DjangoObjectType
-from GraphQLBuildingAPI.permissions import paginate, is_authenticated, get_query
+from GraphQLBuildingsAPI.permissions import paginate, is_authenticated, get_query
 from django.db.models import Q
 
-from .models import (Category, Payment, PaymentImage )
+from .models import (HouseCategory, Payment, PaymentImage )
 
 
-class CategoryType(DjangoObjectType):
-    count = graphene.Int()
+class PaymentCategoryType(DjangoObjectType):
     class Meta:
-        model = Category
-    def resolve_count(self, info):
-        return self.payment_categories.count()
+        model = HouseCategory
+
 
 class PaymentType(DjangoObjectType):
     class Meta:
@@ -23,12 +21,12 @@ class PaymentImageType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    categories = graphene.List(CategoryType, name= graphene.String())
+    paymentcategories = graphene.List(PaymentCategoryType, name= graphene.String())
     payments   = graphene.Field(paginate(PaymentType), search=graphene.String(),
             max_amountpaid=graphene.Float(), min_amountpaid=graphene.Float(), building= graphene.String(), house= graphene.Int(), receipt_no= graphene.Int(), mine=graphene.Boolean())
     payment = graphene.Field(PaymentType, id=graphene.ID(required=True))
 
-    def resolve_categories(self, info, name=False):
+    def resolve_paymentcategories(self, info, name=False):
         query = Category.objects.prefetch_related("payment_categories")
 
         if name:

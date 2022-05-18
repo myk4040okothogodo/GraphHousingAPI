@@ -32,7 +32,7 @@ class Category(models.Model):
 
 class Building(models.Model):
     """A building or apartment of multiple rooms housing tenants."""
-    category = models.ForeignKey(Category, related_name="categoryOf_building", on_delete=models.CASCADE)
+    building_category = models.ForeignKey(Category, related_name="categoryOf_building", on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=False, default='')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="building_owner", on_delete=models.CASCADE)
     careTaker = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="building_caretaker", on_delete=models.CASCADE)

@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 
-class Category(models.Model):
+class HouseCategory(models.Model):
     RENT = 1
     REPAIRS = 2
     WATER_BILL = 3
@@ -29,7 +29,7 @@ class Category(models.Model):
 
 class Payment(models.Model):
     """This class represents rent/utility payments made by the tenants. """
-    categories =  models.ForeignKey(Category, related_name="payment_categories", on_delete=models.CASCADE)
+    categories =  models.ForeignKey(HouseCategory, related_name="payment_categories", on_delete=models.CASCADE)
     house = models.ForeignKey(House,blank=False, null=False, on_delete=models.CASCADE)
     tenant = models.ForeignKey(settings.AUTH_USER_MODEL,blank=False,related_name="payments_tenantid", null=False, on_delete=models.CASCADE)
     amountpaid = models.FloatField()

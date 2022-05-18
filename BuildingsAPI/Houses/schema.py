@@ -6,13 +6,10 @@ from django.db.models import Q
 from .models import (Category, House, HouseImage, HouseComment )
 
 
-class CategoryType(DjangoObjectType):
-    count = graphene.Int()
+class HouseCategoryType(DjangoObjectType):
     class Meta:
         model = Category
-    def resolve_count(self, info):
-        return self.house_category.count()
-
+    
 class HouseType(DjangoObjectType):
     class Meta:
         model = House
@@ -27,13 +24,13 @@ class HouseCommentType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    categories = graphene.List(CategoryType, name=graphene.String())
+    housecategories = graphene.List(HouseCategoryType, name=graphene.String())
     houses   =  graphene.Field(paginate(HouseType), search= graphene.Int(),
             min_rent=graphene.Float(), max_rent=graphene.Float(), category=graphene.String(),
             building = graphene.String(), sort_by=graphene.String(), mine= graphene.Boolean())
     house =  graphene.Field(HouseType, id= graphene.ID(required=True))
             
-    def resolve_categories(self, info, name= False):
+    def resolve_housecategories(self, info, name= False):
         query = Category.objects.prefetch_related("house_categories")
 
         if name:

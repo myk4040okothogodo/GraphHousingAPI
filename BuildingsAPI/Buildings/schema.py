@@ -6,12 +6,10 @@ from django.db.models import Q
 from .models import (Category, Building, BuildingImage, BuildingComment)
 
 
-class CategoryType(DjangoObjectType):
-    count = graphene.Int()
+class BuildingCategoryType(DjangoObjectType):
     class Meta:
         model = Category
-    def resolve_count(self, info):
-        return self.building_categories.count()
+    
 
 class BuildingType(DjangoObjectType):
     class Meta:
@@ -27,15 +25,15 @@ class BuildingCommentType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    categories = graphene.List(CategoryType, name=graphene.String())
+    buildingcategories = graphene.List(BuildingCategoryType, name=graphene.String())
     buildings = graphene.Field(paginate(BuildingType), search=graphene.String(),
         min_rent=graphene.Float(), max_rent=graphene.Float(), category=graphene.String(),
         sort_by=graphene.String(), is_asc=graphene.Boolean(), mine=graphene.Boolean())
     building = graphene.Field(BuildingType, id=graphene.ID(required=True))
 
 
-    def resolve_categories(self, info, name=False):
-        query = Category.objects.prefetch_related("building_categories")
+    def resolve_buildingcategories(self, info, name=False):
+        query = BuildingCategory.objects.prefetch_related("building_categories")
 
         if name:
             query = query.filter(Q(name_icontains=name) | Q(name_iexact=name)).distinct()

@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from datetime import datetime
 from GraphQLBuildingsAPI.authentication import TokenManager
 from GraphQLBuildingsAPI.permissions import is_authenticated, paginate
-from graphene_file_uploads.scalars import Upload
+from graphene_file_upload.scalars import Upload
 from django.conf import settings
 
 
@@ -41,7 +41,7 @@ class  RegisterUser(graphene.Mutation):
     class Arguments:
         email = graphene.String(required=True)
         password = graphene.String(required=True)
-        first_name = graphene.String(rquired=True)
+        first_name = graphene.String(required=True)
         last_name = graphene.String(required=True)
 
     def mutate(self, info, email, password, **kwargs):
@@ -165,7 +165,7 @@ class CreateUserAddress(graphene.Mutation):
         is_default = graphene.Boolean()
 
     @is_authenticated
-    def mutate(self, info, address_data, is_default=False)
+    def mutate(self, info, address_data, is_default=False):
         try:
             user_profile_id = info.context.user.user_profile.id
         except Exception:
